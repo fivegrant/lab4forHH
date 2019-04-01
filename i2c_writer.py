@@ -1,20 +1,16 @@
-#!/usr/bin/python3
+#/usr/bin/python3
 # Five and Zak
 
 from smbus import *
 
-da = 0x48
-configr= 0x01
-conversionr= 0x00
-cb = [0xC0, 0x83]
-rg = 6.144
-
-
-def configure_adc(my_bus, device_address, 
+def write_register(my_bus, device_address, 
  config_register, conversion_register, config_bytes):
     my_bus.write_i2c_block_data(device_address,\
      config_register, config_bytes)
-    
+
+def write_byte(my_bus, device_address, command):
+    my_bus.write_byte(device_address, command)
+   
 def get_raw_adc_reading(my_bus):
     raw_reading = my_bus.read_i2c_block_data(\
      da, conversionr)
