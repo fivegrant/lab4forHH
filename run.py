@@ -25,7 +25,7 @@ c.write_block('adc', configr, cb)
 #7 Segment Setup
 c.write_byte(system_setup) 
 c.write_byte(display_on) 
-c.update(1)
+c.update(23)
 c.update('clear')
-#c.write_byte(display_off) 
+c.write_byte(display_off) 
 
