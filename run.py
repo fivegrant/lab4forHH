@@ -27,6 +27,7 @@ c.write_byte(display_on)
 while True:
     c.update('clear')
     c.convert_raw_reading(conversion, rg)
+    print(c.vout)
     c.update(int(c.convert_voltage_to_temp(\
      9800, 5)))
     time.sleep(2)

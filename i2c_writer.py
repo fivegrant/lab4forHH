@@ -49,7 +49,7 @@ class Circuit:
         return msb + raw_reading[1]
 
     def convert_raw_reading(self, conversionr, rang):
-        self.vout = self.get_raw_adc_reading(conversionr)* (rang/32767)
+        self.vout = self.get_raw_adc_reading(conversionr) * (rang/32767)
         return self.vout   
 
     def convert_voltage_to_temp(self, r2, vin):
