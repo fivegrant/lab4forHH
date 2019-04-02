@@ -11,26 +11,20 @@ rg = 6.144
 
 #Backpack
 backpack_address = 0x70
-#rowint will be added to our segment selection each time
-rowint_base = 0b10100000 
 display_on= 0b10000001
 display_off= 0b10000000
 system_setup = 0b00100001 
 
-#one letter variable names are bad but the code is
-#so short it doesn't really matter
-c = Circuit(SMBus(1), adc_address, backpack_address, rowint_base)
+#one letter variable names are bad but we're lazy 
+c = Circuit(SMBus(1), adc_address, backpack_address)
 
 
 #ADC Setup
 c.write_block('adc', configr, cb)
 
 #7 Segment Setup
-c.write_byte('backpack', system_setup) 
-c.write_byte('backpack', display_on) 
-time.sleep(2)
-c.write_byte('backpack', display_off) 
-
-
-
+c.write_byte(system_setup) 
+c.write_byte(display_on) 
+c.update([(1,0)])
+c.write_byte(display_off) 
 
