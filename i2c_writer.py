@@ -2,7 +2,6 @@
 # Five and Zak
 
 from smbus import *
-import time ##DELETLEEte
 
 class Circuit:
     def __init__(self, bus, adc, backpack):
@@ -25,15 +24,23 @@ class Circuit:
 
     def update(self, temp):
         cells = [0b0, 0b10, 0b110, 0b1000]
+        num = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 0]
         if temp == 'clear':
             for cell in cells:
                 self.write_block('backpack', cell, [0])
         else:
-            for cell in cells:
-                options = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111]
-                for fuck in options:
-                    self.write_block('backpack', cell, [fuck])
-                    time.sleep(1)
+            temp = str(temp)
+            while len(temp) < 4:
+                temp = ' ' + temp
+            iter = 0
+            for char in temp:
+                retrieve = 10
+                try: 
+                   retrieve = int(char) 
+                except:
+                    pass
+                self.write_block('backpack', cells[iter], [num[retrieve]])
+                iter += 1
 
     def get_raw_adc_reading(self, conversionr):
         raw_reading = self.bus.read_i2c_block_data(
@@ -41,9 +48,9 @@ class Circuit:
         msb = raw_reading[0] << 8
         return msb + raw_reading[1]
 
-    def convert_raw_reading(self, rang):
-        self.reading = self.get_raw_adc_reading(conversionr)* (rang/32767)
-        return self.reading    
+    def convert_raw_reading(self, conversionr, rang):
+        self.vout = self.get_raw_adc_reading(conversionr)* (rang/32767)
+        return self.vout   
 
     def convert_voltage_to_temp(self, r2, vin):
         r1 = ((vin*r2)/self.vout) - r2
