@@ -1,6 +1,6 @@
 #/usr/bin/python3
 from i2c_writer import *
-import lights, sys, time
+import sys, time
 
 #ADC
 adc_address = 0x48
@@ -11,13 +11,26 @@ rg = 6.144
 
 #Backpack
 backpack_address = 0x70
-blink_setup = 1000001
-system_setup = 100001 #00100001
+#rowint will be added to our segment selection each time
+rowint_base = 0b10100000 
+display_on= 0b10000001
+display_off= 0b10000000
+system_setup = 0b00100001 
 
-bus = SMBus(1)
-write_register(bus, adc_address, configr, conversionr, cb)
+#one letter variable names are bad but the code is
+#so short it doesn't really matter
+c = Circuit(SMBus(1), adc_address, backpack_address, rowint_base)
 
-write_byte(bus, backpack_address, system_setup) 
-write_byte(bus, backpack_address, blink_setup) 
+
+#ADC Setup
+c.write_block('adc', configr, cb)
+
+#7 Segment Setup
+c.write_byte('backpack', system_setup) 
+c.write_byte('backpack', display_on) 
+time.sleep(2)
+c.write_byte('backpack', display_off) 
+
+
 
 
