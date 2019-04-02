@@ -23,16 +23,18 @@ class Circuit:
     def write_byte(self, cmd):
         self.bus.write_byte(self.backpack, cmd)
 
-    def update(self, changes):
-        for part, value in changes:
-            cell = (part - 1) * 2  if part < 2 \
-             else (part - 1) * 2 + 2
-            options = [63,6,91, 79, 102, 109, 125, 7, 128 , 111]
-            for fuck in [63, 6, 91, 79, 102, 109, 125, 7, 128 , 111]:
-                self.write_block('backpack', cell, [fuck])
-                print('\t\t' + str(fuck))
-                input()
-                
+    def update(self, temp):
+        cells = [0b0, 0b10, 0b110, 0b1000]
+        if temp == 'clear':
+            for cell in cells:
+                self.write_block('backpack', cell, [0])
+        else:
+            for cell in cells:
+                options = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111]
+                for fuck in options:
+                    self.write_block('backpack', cell, [fuck])
+                    time.sleep(1)
+
     def get_raw_adc_reading(self, conversionr):
         raw_reading = self.bus.read_i2c_block_data(
          self.adc, conversionr)
